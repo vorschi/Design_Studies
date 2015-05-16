@@ -30,13 +30,24 @@ void computeCostVolume(const Mat &imgLeft, const Mat &imgRight, vector<Mat> &cos
 	vector<Mat> &costVolumeRight, int windowSize, int maxDisp){
 
 	Mat temp(imgLeft.rows, imgLeft.cols, CV_8UC1);
+	uchar cost;
+
+	int a = windowSize/2;
+	cout << a;
 	for (int x=windowSize; x<imgLeft.cols-windowSize; ++x){		//for-loops for going through picture per pixel
 		for (int y=windowSize; y<imgLeft.rows-windowSize; ++y){
-		
-		
-		
+			
+			for (unsigned int a=windowSize/2; a==-(windowSize/2); --a){
+				for (unsigned int  b=windowSize/2; b==-(windowSize/2); --b){
+					cost+=abs(imgLeft.at<uchar>(x-a, y-b) - imgRight.at<uchar>(x-a-maxDisp, y-b));
+				}		
+			}
+
+			temp.at<uchar>(x,y) = cost;
+			cost = 0;
 		}
 	}
+
 
 
 }
@@ -59,8 +70,8 @@ int main(){
 	int windowSize = 5;
 	int maxDisp = 15;
 
-	Mat dispLeft;
-	Mat dispRight;
+	Mat dispLeft(imgLeft.rows, imgLeft.cols, CV_8UC1);
+	Mat dispRight(imgRight.rows, imgRight.cols, CV_8UC1);
 
 	int scaleDispFactor = 16;
 
@@ -72,11 +83,11 @@ int main(){
 
 	computeCostVolume(imgGrayLeft, imgGrayRight, costVolumeLeft, costVolumeRight, windowSize, maxDisp);
 
-	selectDisparity(dispLeft, dispRight, costVolumeLeft, costVolumeRight, scaleDispFactor);
+	//selectDisparity(dispLeft, dispRight, costVolumeLeft, costVolumeRight, scaleDispFactor);
 
 	
 
-	//imshow("grau", imgGray);
+	imshow("grau", imgGrayLeft);
 	waitKey(0);
 	return 0;
 }
