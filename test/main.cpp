@@ -29,34 +29,69 @@ void convertToGrayscale(const Mat &img, Mat &imgGray){
 void computeCostVolume(const Mat &imgLeft, const Mat &imgRight, vector<Mat> &costVolumeLeft, 
 	vector<Mat> &costVolumeRight, int windowSize, int maxDisp){
 
-	Mat temp(imgLeft.rows, imgLeft.cols, CV_8UC1);
-	uchar cost;
+	Mat temp=imgLeft.clone();
+	//(imgLeft.rows, imgLeft.cols, CV_32FC1);
+	//temp.at<uchar>(1,1) = 128;
+
+	uchar cost = 0;
+	uchar costLeft=0;
+	uchar costRight=0;
 
 	int a = windowSize/2;
 	cout << a;
-	for (int x=windowSize; x<imgLeft.cols-windowSize; ++x){		//for-loops for going through picture per pixel
-		for (int y=windowSize; y<imgLeft.rows-windowSize; ++y){
-			
-			for (unsigned int a=windowSize/2; a==-(windowSize/2); --a){
-				for (unsigned int  b=windowSize/2; b==-(windowSize/2); --b){
-					cost+=abs(imgLeft.at<uchar>(x-a, y-b) - imgRight.at<uchar>(x-a-maxDisp, y-b));
-				}		
+	for(int i=0; i<=maxDisp; i++){	
+		for (int x=0; x<imgLeft.cols; ++x){		//for-loops for going through picture per pixel
+			for (int y=0; y<imgLeft.rows; ++y){
+				for (int a=windowSize/2; a>=(-windowSize/2); --a){
+					for (int  b=windowSize/2; b>=(-windowSize/2); --b){
+						if(((x-a)>0)&&((x-a)<imgLeft.cols)&&((y-b)>0)&&((y-b)<imgLeft.rows)){
+							if((x-a-i)<=0){
+								cost+=255; //TODO
+							}else{
+								cost+=abs(imgLeft.at<uchar>(y-b,x-a) - imgRight.at<uchar>(y-b,x-a-i)); // TODO: maxDisp für alle Fälle
+							//costLeft = imgLeft.at<uchar>(y-b, x-a);
+							//int tester = x-a-maxDisp;
+							//cout << tester;
+							//if(x> 10)
+							//costRight = imgRight.at<uchar>(x-a-maxDisp, y-b);
+							//cost+=abs(costLeft-costRight);
+							//cout << a;
+						//cout << b;
+							}
+						}
+					}		
+				}
+
+				temp.at<uchar>(y,x) = cost;
+				cost = 0;
 			}
-
-			temp.at<uchar>(x,y) = cost;
-			cost = 0;
 		}
+
+		costVolumeLeft.push_back(temp);
 	}
-
-
-
 }
 
 
 void selectDisparity(Mat &dispLeft, Mat &dispRight, vector<Mat> &costVolumeLeft, 
-	vector<Mat> &costvolumeRight, int scaleDispFactor){
+	vector<Mat> &costVolumeRight, int scaleDispFactor){
+	uchar displevel=255;
+	int disperity = 0;
+	for (int x=0; x<dispLeft.cols; ++x){		//for-loops for going through picture per pixel
+		for (int y=0; y<dispLeft.rows; ++y){
+			for(int i=0; i<costVolumeLeft.size(); i++){
+				uchar costVol = costVolumeLeft.at(i).at<uchar>(y,x);
 
+				if(costVol<displevel){
+				  displevel = costVolumeLeft.at(i).at<uchar>(y,x);
+				  disperity = i;
+				}  
+			}
 
+			dispLeft.at<uchar>(y,x)=disperity*scaleDispFactor;
+			disperity = 0;
+			displevel=255;
+		}
+	}
 }
 
 
@@ -83,11 +118,14 @@ int main(){
 
 	computeCostVolume(imgGrayLeft, imgGrayRight, costVolumeLeft, costVolumeRight, windowSize, maxDisp);
 
-	//selectDisparity(dispLeft, dispRight, costVolumeLeft, costVolumeRight, scaleDispFactor);
+	selectDisparity(dispLeft, dispRight, costVolumeLeft, costVolumeRight, scaleDispFactor);
 
 	
 
-	imshow("grau", imgGrayLeft);
+	//imshow("grau", imgGrayLeft);
+	imshow("costvolume 0", costVolumeLeft.at(0));
+	imshow("costvolume 15", costVolumeLeft.at(15));
+	imshow("dispLeft",dispLeft);
 	waitKey(0);
 	return 0;
 }
