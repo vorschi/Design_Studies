@@ -1,30 +1,27 @@
-﻿Der Buildvorgang wurde am 16.05.2015 08:37:58 gestartet.
-     1>Projekt "C:\Users\Vorschi\Documents\GitHub\DesignStudies\test\test.vcxproj" auf Knoten "2", build Ziel(e).
-     1>InitializeBuildStatus:
-         "Debug\UE1.unsuccessfulbuild" wird erstellt, da "AlwaysCreate" angegeben wurde.
-       ClCompile:
-         Alle Ausgaben sind aktuell.
-         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /IC:\Users\Vorschi\Downloads\opencv\build\include /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"StdAfx.h" /Fp"Debug\UE1.pch" /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp
-         main.cpp
-     1>c:\users\vorschi\documents\github\designstudies\test\main.cpp(22): warning C4244: 'Initialisierung': Konvertierung von 'double' in 'uchar', möglicher Datenverlust
-     1>c:\users\vorschi\documents\github\designstudies\test\main.cpp(33): warning C4101: 'cost': Unreferenzierte lokale Variable
-       ManifestResourceCompile:
-         Alle Ausgaben sind aktuell.
-       Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Vorschi\Documents\GitHub\DesignStudies\Debug\UE1.exe" /INCREMENTAL /NOLOGO /LIBPATH:C:\Users\Vorschi\Downloads\opencv\build\x86\vc10\lib opencv_calib3d2410d.lib opencv_contrib2410d.lib opencv_core2410d.lib opencv_features2d2410d.lib opencv_flann2410d.lib opencv_gpu2410d.lib opencv_highgui2410d.lib opencv_imgproc2410d.lib opencv_legacy2410d.lib opencv_ml2410d.lib opencv_objdetect2410d.lib opencv_ts2410d.lib opencv_video2410d.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\UE1.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Users\Vorschi\Documents\GitHub\DesignStudies\Debug\UE1.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Vorschi\Documents\GitHub\DesignStudies\Debug\UE1.lib" /MACHINE:X86 Debug\UE1.exe.embed.manifest.res
-         Debug\stdafx.obj
-         Debug\main.obj
-       Manifest:
-         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /out:"Debug\UE1.exe.embed.manifest" /manifest Debug\UE1.exe.intermediate.manifest
-         Alle Ausgaben sind aktuell.
-       LinkEmbedManifest:
-         Alle Ausgaben sind aktuell.
-         test.vcxproj -> C:\Users\Vorschi\Documents\GitHub\DesignStudies\Debug\UE1.exe
-       FinalizeBuildStatus:
-         Die Datei "Debug\UE1.unsuccessfulbuild" wird gelöscht.
-         Aktualisieren des Timestamps von "Debug\UE1.lastbuildstate".
-     1>Die Erstellung des Projekts "C:\Users\Vorschi\Documents\GitHub\DesignStudies\test\test.vcxproj" ist abgeschlossen, build Ziel(e).
+﻿Der Buildvorgang wurde am 20.05.2015 11:23:05 gestartet.
+Projekt "G:\test\test.vcxproj" auf Knoten "2", build Ziel(e).
+InitializeBuildStatus:
+  "Debug\UE1.unsuccessfulbuild" wird erstellt, da "AlwaysCreate" angegeben wurde.
+ClCompile:
+  Alle Ausgaben sind aktuell.
+  Alle Ausgaben sind aktuell.
+ManifestResourceCompile:
+  C:\Programme\Microsoft SDKs\Windows\v7.0A\bin\rc.exe /nologo /fo"Debug\UE1.exe.embed.manifest.res" Debug\UE1_manifest.rc 
+Link:
+  C:\Programme\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"G:\Debug\UE1.exe" /INCREMENTAL /NOLOGO /LIBPATH:F:\opencv\build\x86\vc10\lib /LIBPATH:C:\Users\Vorschi\Downloads\opencv\build\x86\vc10\lib opencv_calib3d2410d.lib opencv_contrib2410d.lib opencv_core2410d.lib opencv_features2d2410d.lib opencv_flann2410d.lib opencv_gpu2410d.lib opencv_highgui2410d.lib opencv_imgproc2410d.lib opencv_legacy2410d.lib opencv_ml2410d.lib opencv_objdetect2410d.lib opencv_ts2410d.lib opencv_video2410d.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\UE1.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"G:\Debug\UE1.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"G:\Debug\UE1.lib" /MACHINE:X86 Debug\UE1.exe.embed.manifest.res
+  Debug\stdafx.obj
+  Debug\main.obj
+Manifest:
+  C:\Programme\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /out:"Debug\UE1.exe.embed.manifest" /manifest Debug\UE1.exe.intermediate.manifest
+  C:\Programme\Microsoft SDKs\Windows\v7.0A\bin\rc.exe /nologo /fo"Debug\UE1.exe.embed.manifest.res" Debug\UE1_manifest.rc 
+LinkEmbedManifest:
+  Alle Ausgaben sind aktuell.
+  test.vcxproj -> G:\Debug\UE1.exe
+FinalizeBuildStatus:
+  Die Datei "Debug\UE1.unsuccessfulbuild" wird gelöscht.
+  Aktualisieren des Timestamps von "Debug\UE1.lastbuildstate".
+Die Erstellung des Projekts "G:\test\test.vcxproj" ist abgeschlossen, build Ziel(e).
 
 Das Erstellen war erfolgreich.
 
-Verstrichene Zeit 00:00:02.32
+Verstrichene Zeit 00:00:02.64
