@@ -29,9 +29,9 @@ void convertToGrayscale(const Mat &img, Mat &imgGray){
 void computeCostVolume(const Mat &imgLeft, const Mat &imgRight, vector<Mat> &costVolumeLeft, 
 	vector<Mat> &costVolumeRight, int windowSize, int maxDisp){
 
-	Mat temp=imgLeft.clone();
+	Mat temp(imgLeft.rows, imgLeft.cols, CV_8UC1);
+		//=imgLeft.clone(); //TODO? -> CV_32FC1
 	//(imgLeft.rows, imgLeft.cols, CV_32FC1);
-	//temp.at<uchar>(1,1) = 128;
 
 	uchar cost = 0;
 	uchar costLeft=0;
@@ -45,10 +45,10 @@ void computeCostVolume(const Mat &imgLeft, const Mat &imgRight, vector<Mat> &cos
 				for (int a=windowSize/2; a>=(-windowSize/2); --a){
 					for (int  b=windowSize/2; b>=(-windowSize/2); --b){
 						if(((x-a)>0)&&((x-a)<imgLeft.cols)&&((y-b)>0)&&((y-b)<imgLeft.rows)){
-							if((x-a-i)<=0){
-								cost+=255; //TODO
+							if((x-a-i)<0){
+								//cost+=255; //TODO
 							}else{
-								cost+=abs(imgLeft.at<uchar>(y-b,x-a) - imgRight.at<uchar>(y-b,x-a-i)); // TODO: maxDisp für alle Fälle
+								cost+=abs(imgLeft.at<uchar>(y-b,x-a) - imgRight.at<uchar>(y-b,x-a-i));
 							//costLeft = imgLeft.at<uchar>(y-b, x-a);
 							//int tester = x-a-maxDisp;
 							//cout << tester;
@@ -61,13 +61,18 @@ void computeCostVolume(const Mat &imgLeft, const Mat &imgRight, vector<Mat> &cos
 						}
 					}		
 				}
-
+				//if(x==383 && y==287)
+				//	int c=0;
 				temp.at<uchar>(y,x) = cost;
 				cost = 0;
+				
 			}
 		}
-
 		costVolumeLeft.push_back(temp);
+
+		Mat temp2(imgLeft.rows, imgLeft.cols, CV_8UC1);
+		temp = temp2;
+		//temp = Mat::ones(imgLeft.rows, imgLeft.cols, CV_8UC1);
 	}
 }
 
@@ -102,7 +107,7 @@ int main(){
 	vector<Mat> costVolumeLeft;
 	vector<Mat> costVolumeRight;
 	
-	int windowSize = 5;
+	int windowSize = 3;
 	int maxDisp = 15;
 
 	Mat dispLeft(imgLeft.rows, imgLeft.cols, CV_8UC1);
