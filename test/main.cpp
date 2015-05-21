@@ -12,8 +12,8 @@ using namespace cv;
 
 void convertToGrayscale(const Mat &img, Mat &imgGray){
 	
-	for (int x=0; x<img.cols; ++x){		//for-loops for going through picture per pixel
-		for (int y=0; y<img.rows; ++y){
+	for (int x=0; x<img.cols; x++){		//for-loops for going through picture per pixel
+		for (int y=0; y<img.rows; y++){
 			
 			Vec3b intensity = img.at<Vec3b>(y, x);		//calculating luminance value for each pixel
 			uchar blue = intensity.val[0];				//and pass it to the grayscale image
@@ -33,22 +33,23 @@ void computeCostVolume(const Mat &imgLeft, const Mat &imgRight, vector<Mat> &cos
 		//=imgLeft.clone(); //TODO? -> CV_32FC1
 	//(imgLeft.rows, imgLeft.cols, CV_32FC1);
 
-	uchar cost = 0;
+	int cost = 0;
 	uchar costLeft=0;
 	uchar costRight=0;
 
 	int a = windowSize/2;
 	cout << a;
 	for(int i=0; i<=maxDisp; i++){	
-		for (int x=0; x<imgLeft.cols; ++x){		//for-loops for going through picture per pixel
-			for (int y=0; y<imgLeft.rows; ++y){
-				for (int a=windowSize/2; a>=(-windowSize/2); --a){
-					for (int  b=windowSize/2; b>=(-windowSize/2); --b){
-						if(((x-a)>0)&&((x-a)<imgLeft.cols)&&((y-b)>0)&&((y-b)<imgLeft.rows)){
-							if((x-a-i)<0){
-								//cost+=255; //TODO
-							}else{
-								cost+=abs(imgLeft.at<uchar>(y-b,x-a) - imgRight.at<uchar>(y-b,x-a-i));
+		for (int x=0; x<imgLeft.cols; x++){		//for-loops for going through picture per pixel
+			for (int y=0; y<imgLeft.rows; y++){
+				for (int a=windowSize/2; a>=(-windowSize/2); a--){
+					for (int  b=windowSize/2; b>=(-windowSize/2); b--){
+						if((x>i)&&(y>windowSize/2)&&((y+windowSize/2)<imgLeft.rows)&&((x+windowSize/2)<imgLeft.cols)){
+							if(((x-a)>0)&&((x-a)<imgLeft.cols)&&((y-b)>0)&&((y-b)<imgLeft.rows)){
+								if((x-a-i)<0){
+									cost+=1000; //TODO
+								}else{
+									cost+=abs(imgLeft.at<uchar>(y-b,x-a) - imgRight.at<uchar>(y-b,x-a-i));
 							//costLeft = imgLeft.at<uchar>(y-b, x-a);
 							//int tester = x-a-maxDisp;
 							//cout << tester;
@@ -57,10 +58,13 @@ void computeCostVolume(const Mat &imgLeft, const Mat &imgRight, vector<Mat> &cos
 							//cost+=abs(costLeft-costRight);
 							//cout << a;
 						//cout << b;
+								}
 							}
 						}
 					}		
 				}
+				cost=cost/(windowSize*windowSize);
+				if(cost>255)cost=0;
 				//if(x==383 && y==287)
 				//	int c=0;
 				temp.at<uchar>(y,x) = cost;
@@ -104,10 +108,16 @@ int main(){
 	const Mat imgLeft = imread("tsukuba_left.png", CV_LOAD_IMAGE_UNCHANGED);
 	const Mat imgRight = imread("tsukuba_right.png", CV_LOAD_IMAGE_UNCHANGED);
 	
+	//const Mat imgLeft = imread("tsukuba_left.png", CV_LOAD_IMAGE_GRAYSCALE);
+	//const Mat imgRight = imread("tsukuba_right.png", CV_LOAD_IMAGE_GRAYSCALE);
+
+	//imshow("imgLeftGray",imgLeft);
+	//imshow("imgRightGray",imgRight);
+
 	vector<Mat> costVolumeLeft;
 	vector<Mat> costVolumeRight;
 	
-	int windowSize = 3;
+	int windowSize = 5;
 	int maxDisp = 15;
 
 	Mat dispLeft(imgLeft.rows, imgLeft.cols, CV_8UC1);
@@ -120,6 +130,9 @@ int main(){
 
 	convertToGrayscale(imgLeft, imgGrayLeft);
 	convertToGrayscale(imgRight, imgGrayRight);
+
+	//imshow("imgLeftGray",imgGrayLeft);
+	//imshow("imgRightGray",imgGrayRight);
 
 	computeCostVolume(imgGrayLeft, imgGrayRight, costVolumeLeft, costVolumeRight, windowSize, maxDisp);
 

@@ -1,4 +1,4 @@
-﻿Der Buildvorgang wurde am 20.05.2015 15:39:01 gestartet.
+﻿Der Buildvorgang wurde am 21.05.2015 23:49:12 gestartet.
 Projekt "G:\test\test.vcxproj" auf Knoten "2", build Ziel(e).
 InitializeBuildStatus:
   "Debug\UE1.unsuccessfulbuild" wird erstellt, da "AlwaysCreate" angegeben wurde.
@@ -7,7 +7,7 @@ ClCompile:
   C:\Programme\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /IF:\opencv\build\include /IC:\Users\Vorschi\Downloads\opencv\build\include /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"StdAfx.h" /Fp"Debug\UE1.pch" /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp
   main.cpp
 g:\test\main.cpp(22): warning C4244: 'Initialisierung': Konvertierung von 'double' in 'uchar', möglicher Datenverlust
-g:\test\main.cpp(86): warning C4018: '<': Konflikt zwischen 'signed' und 'unsigned'
+g:\test\main.cpp(90): warning C4018: '<': Konflikt zwischen 'signed' und 'unsigned'
 ManifestResourceCompile:
   Alle Ausgaben sind aktuell.
 Link:
@@ -27,4 +27,4 @@ Die Erstellung des Projekts "G:\test\test.vcxproj" ist abgeschlossen, build Ziel
 
 Das Erstellen war erfolgreich.
 
-Verstrichene Zeit 00:00:05.57
+Verstrichene Zeit 00:00:04.34
