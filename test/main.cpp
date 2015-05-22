@@ -1,6 +1,5 @@
 // test.cpp : Definiert den Einstiegspunkt für die Konsolenanwendung.
 
-
 #include "stdafx.h"
 #include <iostream>
 #include <stdio.h>
@@ -29,12 +28,11 @@ void convertToGrayscale(const Mat &img, Mat &imgGray){
 void computeCostVolume(const Mat &imgLeft, const Mat &imgRight, vector<Mat> &costVolumeLeft, 
 	vector<Mat> &costVolumeRight, int windowSize, int maxDisp){
 
-	Mat temp(imgLeft.rows, imgLeft.cols, CV_8UC1);		//matrices for storing cost volume temporarily
-	
+	Mat tempLeft(imgLeft.rows, imgLeft.cols, CV_8UC1);		//matrices for storing cost volume temporarily
+	Mat tempRight(imgRight.rows, imgRight.cols, CV_8UC1);
 
-	int cost = 0;
-
-	int a = windowSize/2;
+	int costLeft = 0;
+	int costRight = 0;
 
 	for(int i=0; i<=maxDisp; i++){		// for-loop for disparity values
 
@@ -44,55 +42,101 @@ void computeCostVolume(const Mat &imgLeft, const Mat &imgRight, vector<Mat> &cos
 				for (int a=windowSize/2; a>=(-windowSize/2); a--){		//for-loops for scanning window
 					for (int  b=windowSize/2; b>=(-windowSize/2); b--){
 
-						if((x>i)&&(y>windowSize/2)&&((y+windowSize/2)<imgLeft.rows)&&((x+windowSize/2)<imgLeft.cols)){			//handling boundary problems
+						if((x>i)&&(y>windowSize/2)&&((y+windowSize/2)<imgLeft.rows)&&((x+windowSize/2)<imgLeft.cols)){			//handling boundary problems left
 							if(((x-a)>0)&&((x-a)<imgLeft.cols)&&((y-b)>0)&&((y-b)<imgLeft.rows)){
+								
 								if((x-a-i)<0){		//setting costVolume very high for out-of-image-windows
-									cost+=1000; 
-								}else{				//calculating costVolums
-									cost+=abs(imgLeft.at<uchar>(y-b,x-a) - imgRight.at<uchar>(y-b,x-a-i));
+									costLeft+=1000; 
+								}
+								else{				//calculating costVolums
+									costLeft+=abs(imgLeft.at<uchar>(y-b,x-a) - imgRight.at<uchar>(y-b,x-a-i));
 							
 								}
 							}
 						}
+
+						if((x>i)&&(y>windowSize/2)&&((y+windowSize/2)<imgRight.rows)&&((x+windowSize/2)<imgRight.cols)){			//handling boundary problems right
+							if(((x-a)>0)&&((x-a)<imgRight.cols)&&((y-b)>0)&&((y-b)<imgRight.rows)){
+								
+								if((x-a-i)<0){		//setting costVolume very high for out-of-image-windows
+									costRight+=1000; 
+								}
+								else{				//calculating costVolums
+									costRight+=abs(imgRight.at<uchar>(y-b,x-a) - imgLeft.at<uchar>(y-b,x-a-i));
+							
+								}
+							}
+						}
+						
 					}		
 				}
 
-				cost=cost/(windowSize*windowSize);		//normalizing cost volume
-				if(cost>255){
-					cost=0;
+				costLeft = costLeft / (windowSize * windowSize);		//normalizing cost volume
+				costRight = costRight / (windowSize * windowSize);
+
+				/*if(costLeft>255){
+					costLeft=0;
 				}
-				temp.at<uchar>(y,x) = cost;			//write cost volume in temporary matrix and reset it
-				cost = 0;
+
+				if (costRight>255){
+					costRight=0;
+				}*/
+				
+				tempLeft.at<uchar>(y,x) = costLeft;			//write cost volume in temporary matrix and reset it
+				tempRight.at<uchar>(y,x) = costRight;
+				costLeft = 0;
+				costRight = 0;
 				
 			}
 		}
-		costVolumeLeft.push_back(temp);			//writing cost Volume matrix in vector and reset it
+		costVolumeLeft.push_back(tempLeft);			//writing cost Volume matrix in vector and reset it
+		costVolumeRight.push_back(tempRight);
 
 		Mat temp2(imgLeft.rows, imgLeft.cols, CV_8UC1);
-		temp = temp2;
+		Mat temp3(imgRight.rows, imgRight.cols, CV_8UC1);
+		tempLeft = temp2;
+		tempRight = temp3;
 	}
 }
 
 
 void selectDisparity(Mat &dispLeft, Mat &dispRight, vector<Mat> &costVolumeLeft, 
 	vector<Mat> &costVolumeRight, int scaleDispFactor){
-	uchar displevel=255;
-	int disperity = 0;
+	
+	uchar displevelLeft = 255;
+	uchar displevelRight = 255;
+
+	int disperityLeft = 0;
+	int disperityRight = 0;
+
+	uchar costVolLeft = 0;
+	uchar costVolRight = 0;
+
 	for (int x=0; x<dispLeft.cols; ++x){		//for-loops for going through picture per pixel
 		for (int y=0; y<dispLeft.rows; ++y){
+
 			for(int i=0; i<costVolumeLeft.size(); i++){			//for-loops for different disparity values
 
-				uchar costVol = costVolumeLeft.at(i).at<uchar>(y,x);
+				costVolLeft = costVolumeLeft.at(i).at<uchar>(y,x);
+				costVolRight = costVolumeRight.at(i).at<uchar>(y,x);
 
-				if(costVol<displevel){				//check if current cost volume is lower then previously lowest
-				  displevel = costVolumeLeft.at(i).at<uchar>(y,x);			//if so, set it as new lower boundary
-				  disperity = i;
+				if (costVolLeft<displevelLeft){				//check if current cost volume is lower then previously lowest
+				  displevelLeft = costVolumeLeft.at(i).at<uchar>(y,x);			//if so, set it as new lower boundary
+				  disperityLeft = i;
 				}  
+
+				if (costVolRight<displevelRight){
+					displevelRight = costVolumeRight.at(i).at<uchar>(y,x);
+					disperityRight = i;
+				}
 			}
 
-			dispLeft.at<uchar>(y,x)=disperity*scaleDispFactor;			//set pixel in desparity map
-			disperity = 0;
-			displevel=255;
+			dispLeft.at<uchar>(y,x)=disperityLeft*scaleDispFactor;			//set pixel in desparity map
+			dispRight.at<uchar>(y,x)=disperityRight*scaleDispFactor;			//set pixel in desparity map
+			disperityLeft = 0;
+			disperityRight = 0;
+			displevelLeft = 255;
+			displevelRight = 255;
 		}
 	}
 }
@@ -105,7 +149,7 @@ int main(){
 	vector<Mat> costVolumeLeft;			//vectors for storing the different cost volumes for each disparity
 	vector<Mat> costVolumeRight;
 	
-	int windowSize = 7;			//scanning window size
+	int windowSize = 5;			//scanning window size
 	int maxDisp = 15;			//definition of the maximum disparity
 
 	Mat dispLeft(imgLeft.rows, imgLeft.cols, CV_8UC1);
@@ -127,4 +171,3 @@ int main(){
 	waitKey(0);
 	return 0;
 }
-

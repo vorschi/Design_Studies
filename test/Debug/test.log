@@ -1,4 +1,4 @@
-﻿Der Buildvorgang wurde am 22.05.2015 15:22:53 gestartet.
+﻿Der Buildvorgang wurde am 22.05.2015 18:08:16 gestartet.
      1>Projekt "C:\Users\Vorschi\Documents\GitHub\DesignStudies\test\test.vcxproj" auf Knoten "2", build Ziel(e).
      1>InitializeBuildStatus:
          "Debug\UE1.unsuccessfulbuild" wird erstellt, da "AlwaysCreate" angegeben wurde.
@@ -6,8 +6,8 @@
          Alle Ausgaben sind aktuell.
          C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /IF:\opencv\build\include /IC:\Users\Vorschi\Downloads\opencv\build\include /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"StdAfx.h" /Fp"Debug\UE1.pch" /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp
          main.cpp
-     1>c:\users\vorschi\documents\github\designstudies\test\main.cpp(22): warning C4244: 'Initialisierung': Konvertierung von 'double' in 'uchar', möglicher Datenverlust
-     1>c:\users\vorschi\documents\github\designstudies\test\main.cpp(83): warning C4018: '<': Konflikt zwischen 'signed' und 'unsigned'
+     1>c:\users\vorschi\documents\github\designstudies\test\main.cpp(21): warning C4244: 'Initialisierung': Konvertierung von 'double' in 'uchar', möglicher Datenverlust
+     1>c:\users\vorschi\documents\github\designstudies\test\main.cpp(118): warning C4018: '<': Konflikt zwischen 'signed' und 'unsigned'
        ManifestResourceCompile:
          Alle Ausgaben sind aktuell.
        Link:
@@ -27,4 +27,4 @@
 
 Das Erstellen war erfolgreich.
 
-Verstrichene Zeit 00:00:01.73
+Verstrichene Zeit 00:00:01.69
