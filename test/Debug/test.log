@@ -1,4 +1,4 @@
-﻿Der Buildvorgang wurde am 22.05.2015 18:08:16 gestartet.
+﻿Der Buildvorgang wurde am 22.05.2015 18:15:08 gestartet.
      1>Projekt "C:\Users\Vorschi\Documents\GitHub\DesignStudies\test\test.vcxproj" auf Knoten "2", build Ziel(e).
      1>InitializeBuildStatus:
          "Debug\UE1.unsuccessfulbuild" wird erstellt, da "AlwaysCreate" angegeben wurde.
@@ -27,4 +27,4 @@
 
 Das Erstellen war erfolgreich.
 
-Verstrichene Zeit 00:00:01.69
+Verstrichene Zeit 00:00:01.63

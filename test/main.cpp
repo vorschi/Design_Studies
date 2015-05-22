@@ -74,13 +74,13 @@ void computeCostVolume(const Mat &imgLeft, const Mat &imgRight, vector<Mat> &cos
 				costLeft = costLeft / (windowSize * windowSize);		//normalizing cost volume
 				costRight = costRight / (windowSize * windowSize);
 
-				/*if(costLeft>255){
-					costLeft=0;
+				if(costLeft>255){
+					costLeft=255;
 				}
 
 				if (costRight>255){
-					costRight=0;
-				}*/
+					costRight=255;
+				}
 				
 				tempLeft.at<uchar>(y,x) = costLeft;			//write cost volume in temporary matrix and reset it
 				tempRight.at<uchar>(y,x) = costRight;
