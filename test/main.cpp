@@ -34,6 +34,11 @@ void computeCostVolume(const Mat &imgLeft, const Mat &imgRight, vector<Mat> &cos
 	int costLeft = 0;
 	int costRight = 0;
 
+	int normLeft = 0;
+	int normRight = 0;
+
+	int windowArea = windowSize*windowSize;
+
 	for(int i=0; i<=maxDisp; i++){		// for-loop for disparity values
 
 		for (int x=0; x<imgLeft.cols; x++){		//for-loops for going through picture per pixel
@@ -42,34 +47,44 @@ void computeCostVolume(const Mat &imgLeft, const Mat &imgRight, vector<Mat> &cos
 				for (int a=windowSize/2; a>=(-windowSize/2); a--){		//for-loops for scanning window
 					for (int  b=windowSize/2; b>=(-windowSize/2); b--){
 
-						if((x>i)&&(y>windowSize/2)&&((y+windowSize/2)<imgLeft.rows)&&((x+windowSize/2)<imgLeft.cols)){			//handling boundary problems left
+						//if((x>i)&&(y>windowSize/2)&&((y+windowSize/2)<imgLeft.rows)&&((x+windowSize/2)<imgLeft.cols)){			//handling boundary problems left
 							if(((x-a)>0)&&((x-a)<imgLeft.cols)&&((y-b)>0)&&((y-b)<imgLeft.rows)){
-								
+				
 								if((x-a-i)<0){		//setting costVolume very high for out-of-image-windows
 									costLeft+=1000; 
 								}
 								else{				//calculating costVolums
 									costLeft+=abs(imgLeft.at<uchar>(y-b,x-a) - imgRight.at<uchar>(y-b,x-a-i));
+									normLeft++;
 								}
 							}
-						}
+						
 
-						if((x>i)&&(y>windowSize/2)&&((y+windowSize/2)<imgRight.rows)&&((x+windowSize/2)<imgRight.cols)){			//handling boundary problems right
-							if(((x-a)>0)&&((x-a)<imgRight.cols)&&((y-b)>0)&&((y-b)<imgRight.rows)){
+						//if((x>i)&&(y>windowSize/2)&&((y+windowSize/2)<imgRight.rows)&&((x+windowSize/2)<imgRight.cols)){			//handling boundary problems right
+							if(((x-a)>0)&&((x-a)<imgLeft.cols)&&((y-b)>0)&&((y-b)<imgLeft.rows)){
 								
-								if((x-a-i)<0){		//setting costVolume very high for out-of-image-windows
-									costRight+=1000; 
+								if((x-a+i)>=imgLeft.cols){		//setting costVolume very high for out-of-image-windows
+									costRight+=1000;
 								}
 								else{				//calculating costVolums
-									costRight+=abs(imgRight.at<uchar>(y-b,x-a) - imgLeft.at<uchar>(y-b,x-a-i));
+									costRight+=abs(imgRight.at<uchar>(y-b,x-a) - imgLeft.at<uchar>(y-b,x-a+i));
+									normRight++;
 								}
+
 							}
-						}
+						
 					}		
 				}
-				
-				costLeft = costLeft / (windowSize * windowSize);		//normalizing cost volume
-				costRight = costRight / (windowSize * windowSize);
+
+				if (normLeft==0){
+					normLeft=1;
+				}
+				if (normRight==0){
+					normRight=1;
+				}
+							
+				costLeft = costLeft / normLeft;		//normalizing cost volume
+				costRight = costRight / normRight;
 
 				if(costLeft>255 || costLeft==0){
 					costLeft=255;
@@ -83,6 +98,8 @@ void computeCostVolume(const Mat &imgLeft, const Mat &imgRight, vector<Mat> &cos
 				tempRight.at<uchar>(y,x) = costRight;
 				costLeft = 0;
 				costRight = 0;
+				normLeft=0;
+				normRight=0;
 			}
 		}
 		costVolumeLeft.push_back(tempLeft);			//writing cost Volume matrix in vector and reset it
@@ -161,7 +178,7 @@ int main(){
 
 	selectDisparity(dispLeft, dispRight, costVolumeLeft, costVolumeRight, scaleDispFactor);
 
-	imshow("dispLeft",dispLeft);
+	imshow("dispLeft", dispLeft);
 
 	waitKey(0);
 	return 0;
