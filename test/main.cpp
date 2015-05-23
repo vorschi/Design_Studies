@@ -50,7 +50,6 @@ void computeCostVolume(const Mat &imgLeft, const Mat &imgRight, vector<Mat> &cos
 								}
 								else{				//calculating costVolums
 									costLeft+=abs(imgLeft.at<uchar>(y-b,x-a) - imgRight.at<uchar>(y-b,x-a-i));
-							
 								}
 							}
 						}
@@ -63,22 +62,20 @@ void computeCostVolume(const Mat &imgLeft, const Mat &imgRight, vector<Mat> &cos
 								}
 								else{				//calculating costVolums
 									costRight+=abs(imgRight.at<uchar>(y-b,x-a) - imgLeft.at<uchar>(y-b,x-a-i));
-							
 								}
 							}
 						}
-						
 					}		
 				}
-
+				
 				costLeft = costLeft / (windowSize * windowSize);		//normalizing cost volume
 				costRight = costRight / (windowSize * windowSize);
 
-				if(costLeft>255){
+				if(costLeft>255 || costLeft==0){
 					costLeft=255;
 				}
 
-				if (costRight>255){
+				if (costRight>255 ||costRight==0){
 					costRight=255;
 				}
 				
@@ -86,7 +83,6 @@ void computeCostVolume(const Mat &imgLeft, const Mat &imgRight, vector<Mat> &cos
 				tempRight.at<uchar>(y,x) = costRight;
 				costLeft = 0;
 				costRight = 0;
-				
 			}
 		}
 		costVolumeLeft.push_back(tempLeft);			//writing cost Volume matrix in vector and reset it
@@ -98,7 +94,6 @@ void computeCostVolume(const Mat &imgLeft, const Mat &imgRight, vector<Mat> &cos
 		tempRight = temp3;
 	}
 }
-
 
 void selectDisparity(Mat &dispLeft, Mat &dispRight, vector<Mat> &costVolumeLeft, 
 	vector<Mat> &costVolumeRight, int scaleDispFactor){
@@ -141,7 +136,6 @@ void selectDisparity(Mat &dispLeft, Mat &dispRight, vector<Mat> &costVolumeLeft,
 	}
 }
 
-
 int main(){
 	const Mat imgLeft = imread("tsukuba_left.png", CV_LOAD_IMAGE_UNCHANGED);		//reading the two original images
 	const Mat imgRight = imread("tsukuba_right.png", CV_LOAD_IMAGE_UNCHANGED);
@@ -168,6 +162,7 @@ int main(){
 	selectDisparity(dispLeft, dispRight, costVolumeLeft, costVolumeRight, scaleDispFactor);
 
 	imshow("dispLeft",dispLeft);
+
 	waitKey(0);
 	return 0;
 }
