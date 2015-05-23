@@ -178,7 +178,11 @@ int main(){
 
 	selectDisparity(dispLeft, dispRight, costVolumeLeft, costVolumeRight, scaleDispFactor);
 
-	imshow("dispLeft", dispLeft);
+	imshow("dispLeft",dispLeft);
+	imshow("dispRight",dispRight);
+
+	//imwrite("dispLeft.png",dispLeft);
+	//imwrite("dispRight.png",dispRight);
 
 	waitKey(0);
 	return 0;
