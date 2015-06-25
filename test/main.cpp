@@ -155,10 +155,6 @@ void aggregateCostVolume(const cv::Mat &imgLeft, const cv::Mat &imgRight, std::v
 &costVolumeLeft, std::vector<cv::Mat> &costVolumeRight, int r, double eps){
 
 eps *= 255 * 255;   
-Mat tempLeft(imgLeft.rows, imgLeft.cols, CV_32FC1);		//matrices for storing cost volume temporarily
-Mat tempRight(imgRight.rows, imgRight.cols, CV_32FC1);
-imgLeft.convertTo(tempLeft, CV_32F);
-imgRight.convertTo(tempRight, CV_32F);
 
 for(int i=0; i<costVolumeLeft.size(); i++){
 	costVolumeLeft.at(i) = guidedFilter(imgLeft, costVolumeLeft[i], r, eps);

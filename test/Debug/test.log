@@ -1,7 +1,7 @@
-﻿Der Buildvorgang wurde am 25.06.2015 16:11:54 gestartet.
+﻿Der Buildvorgang wurde am 25.06.2015 15:49:50 gestartet.
      1>Projekt "C:\Users\Vorschi\Documents\GitHub\DesignStudies\test\test.vcxproj" auf Knoten "2", build Ziel(e).
      1>InitializeBuildStatus:
-         "Debug\UE1.unsuccessfulbuild" wird erstellt, da "AlwaysCreate" angegeben wurde.
+         Aktualisieren des Timestamps von "Debug\UE1.unsuccessfulbuild".
        ClCompile:
          Alle Ausgaben sind aktuell.
          C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /IF:\opencv\build\include /IC:\Users\Vorschi\Downloads\opencv\build\include /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"StdAfx.h" /Fp"Debug\UE1.pch" /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt guidedfilter.cpp main.cpp
@@ -10,7 +10,7 @@
      1>c:\users\vorschi\documents\github\designstudies\test\main.cpp(128): warning C4018: '<': Konflikt zwischen 'signed' und 'unsigned'
      1>c:\users\vorschi\documents\github\designstudies\test\main.cpp(134): warning C4244: '=': Konvertierung von 'float' in 'uchar', möglicher Datenverlust
      1>c:\users\vorschi\documents\github\designstudies\test\main.cpp(139): warning C4244: '=': Konvertierung von 'float' in 'uchar', möglicher Datenverlust
-     1>c:\users\vorschi\documents\github\designstudies\test\main.cpp(163): warning C4018: '<': Konflikt zwischen 'signed' und 'unsigned'
+     1>c:\users\vorschi\documents\github\designstudies\test\main.cpp(159): warning C4018: '<': Konflikt zwischen 'signed' und 'unsigned'
          guidedfilter.cpp
      1>c:\users\vorschi\documents\github\designstudies\test\guidedfilter.cpp(1): warning C4627: "#include "guidedfilter.h"": Wird bei der Suche nach Verwendung des vorkompilierten Headers übersprungen.
                  "StdAfx.h" Direktive hinzufügen oder vorkompilierten Header erneut erstellen
@@ -20,4 +20,4 @@
 
 Fehler beim Erstellen
 
-Verstrichene Zeit 00:00:02.27
+Verstrichene Zeit 00:00:02.12
