@@ -3,6 +3,7 @@
 #include "stdafx.h"
 #include <iostream>
 #include <stdio.h>
+#include "guidedfilter.h"
 #include <opencv2\opencv.hpp>
 #include "opencv2/highgui/highgui.hpp"
 
@@ -28,14 +29,19 @@ void convertToGrayscale(const Mat &img, Mat &imgGray){
 void computeCostVolume(const Mat &imgLeft, const Mat &imgRight, vector<Mat> &costVolumeLeft, 
 	vector<Mat> &costVolumeRight, int windowSize, int maxDisp){
 
-	Mat tempLeft(imgLeft.rows, imgLeft.cols, CV_8UC1);		//matrices for storing cost volume temporarily
-	Mat tempRight(imgRight.rows, imgRight.cols, CV_8UC1);
+		
+	int borderSize = windowSize/2;
 
-	int costLeft = 0;
-	int costRight = 0;
+	Mat tempLeft(imgLeft.rows, imgLeft.cols, CV_32FC1);		//matrices for storing cost volume temporarily
+	Mat tempRight(imgRight.rows, imgRight.cols, CV_32FC1);
 
-	int normLeft = 0;
-	int normRight = 0;
+	float costLeft = 0;
+	float costRight = 0;
+
+	float normLeft = 0;
+	float normRight = 0;
+
+
 
 	int windowArea = windowSize*windowSize;
 
@@ -76,26 +82,18 @@ void computeCostVolume(const Mat &imgLeft, const Mat &imgRight, vector<Mat> &cos
 					}		
 				}
 
-				if (normLeft==0){
-					normLeft=1;
-				}
-				if (normRight==0){
-					normRight=1;
-				}
-							
-				costLeft = costLeft / normLeft;		//normalizing cost volume
-				costRight = costRight / normRight;
+				if (normLeft==0)			
+					costLeft = costLeft / normLeft;		//normalizing cost volume
+				if (normRight==0)
+					costRight = costRight / normRight;
 
-				if(costLeft>255 || costLeft==0){
-					costLeft=255;
-				}
-
-				if (costRight>255 ||costRight==0){
+				if (costRight>255)
 					costRight=255;
-				}
-				
-				tempLeft.at<uchar>(y,x) = costLeft;			//write cost volume in temporary matrix and reset it
-				tempRight.at<uchar>(y,x) = costRight;
+				if (costLeft>255)
+					costLeft=255;
+
+				tempLeft.at<float>(y,x) = costLeft;			//write cost volume in temporary matrix and reset it
+				tempRight.at<float>(y,x) = costRight;
 				costLeft = 0;
 				costRight = 0;
 				normLeft=0;
@@ -105,8 +103,8 @@ void computeCostVolume(const Mat &imgLeft, const Mat &imgRight, vector<Mat> &cos
 		costVolumeLeft.push_back(tempLeft);			//writing cost Volume matrix in vector and reset it
 		costVolumeRight.push_back(tempRight);
 
-		Mat temp2(imgLeft.rows, imgLeft.cols, CV_8UC1);
-		Mat temp3(imgRight.rows, imgRight.cols, CV_8UC1);
+		Mat temp2(imgLeft.rows, imgLeft.cols, CV_32FC1);
+		Mat temp3(imgRight.rows, imgRight.cols, CV_32FC1);
 		tempLeft = temp2;
 		tempRight = temp3;
 	}
@@ -121,24 +119,24 @@ void selectDisparity(Mat &dispLeft, Mat &dispRight, vector<Mat> &costVolumeLeft,
 	int disperityLeft = 0;
 	int disperityRight = 0;
 
-	uchar costVolLeft = 0;
-	uchar costVolRight = 0;
+	float costVolLeft = 0;
+	float costVolRight = 0;
 
 	for (int x=0; x<dispLeft.cols; ++x){		//for-loops for going through picture per pixel
 		for (int y=0; y<dispLeft.rows; ++y){
 
 			for(int i=0; i<costVolumeLeft.size(); i++){			//for-loops for different disparity values
 
-				costVolLeft = costVolumeLeft.at(i).at<uchar>(y,x);
-				costVolRight = costVolumeRight.at(i).at<uchar>(y,x);
+				costVolLeft = costVolumeLeft.at(i).at<float>(y,x);
+				costVolRight = costVolumeRight.at(i).at<float>(y,x);
 
 				if (costVolLeft<displevelLeft){				//check if current cost volume is lower then previously lowest
-				  displevelLeft = costVolumeLeft.at(i).at<uchar>(y,x);			//if so, set it as new lower boundary
+				  displevelLeft = costVolumeLeft.at(i).at<float>(y,x);			//if so, set it as new lower boundary
 				  disperityLeft = i;
 				}  
 
 				if (costVolRight<displevelRight){
-					displevelRight = costVolumeRight.at(i).at<uchar>(y,x);
+					displevelRight = costVolumeRight.at(i).at<float>(y,x);
 					disperityRight = i;
 				}
 			}
@@ -153,6 +151,21 @@ void selectDisparity(Mat &dispLeft, Mat &dispRight, vector<Mat> &costVolumeLeft,
 	}
 }
 
+void aggregateCostVolume(const cv::Mat &imgLeft, const cv::Mat &imgRight, std::vector<cv::Mat>
+&costVolumeLeft, std::vector<cv::Mat> &costVolumeRight, int r, double eps){
+
+eps *= 255 * 255;   
+
+for(int i=0; i<costVolumeLeft.size(); i++){
+	costVolumeLeft.at(i) = guidedFilter(imgLeft, costVolumeLeft[i], r, eps);
+	costVolumeRight.at(i) = guidedFilter(costVolumeRight[i], imgRight, r, eps);
+}
+}
+
+void refineDisparity(cv::Mat &dispLeft, cv::Mat &dispRight, int scaleDispFactor){
+
+}
+
 int main(){
 	const Mat imgLeft = imread("tsukuba_left.png", CV_LOAD_IMAGE_UNCHANGED);		//reading the two original images
 	const Mat imgRight = imread("tsukuba_right.png", CV_LOAD_IMAGE_UNCHANGED);
@@ -160,11 +173,14 @@ int main(){
 	vector<Mat> costVolumeLeft;			//vectors for storing the different cost volumes for each disparity
 	vector<Mat> costVolumeRight;
 	
-	int windowSize = 5;			//scanning window size
+	int windowSize = 3;			//scanning window size
 	int maxDisp = 15;			//definition of the maximum disparity
 
 	Mat dispLeft(imgLeft.rows, imgLeft.cols, CV_8UC1);
 	Mat dispRight(imgRight.rows, imgRight.cols, CV_8UC1);
+
+	int r = 2;
+	double eps = 0.1 * 0.1;
 
 	int scaleDispFactor = 16;		//stretches the disparity levels for better visualization
 
@@ -176,13 +192,12 @@ int main(){
 
 	computeCostVolume(imgGrayLeft, imgGrayRight, costVolumeLeft, costVolumeRight, windowSize, maxDisp);
 
+	aggregateCostVolume(imgLeft, imgRight, costVolumeLeft, costVolumeRight, r, eps);
+
 	selectDisparity(dispLeft, dispRight, costVolumeLeft, costVolumeRight, scaleDispFactor);
 
 	imshow("dispLeft",dispLeft);
 	imshow("dispRight",dispRight);
-
-	//imwrite("dispLeft.png",dispLeft);
-	//imwrite("dispRight.png",dispRight);
 
 	waitKey(0);
 	return 0;
